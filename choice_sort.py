@@ -2,6 +2,9 @@ import time
 import random
 
 
+# В этом варианте много перестановок: не запоминается индекс текущего
+# мин.значения, а сразу меняется местами.
+
 def choice_sort_var1(arr):
     """Сортирует по возрастанию. Изменяет исходный список"""
     N = len(arr)
@@ -9,6 +12,21 @@ def choice_sort_var1(arr):
         for k in range(pos+1, N):
             if arr[k] < arr[pos]:
                 arr[k], arr[pos] = arr[pos], arr[k]
+    return arr
+
+
+# В этом варианте тоже двойной цикл, но перестановка только одна - после
+# вложенного цикла, когда найден текущий минимум.
+
+def choice_sort_var2(arr):
+    """Сортирует по возрастанию. Изменяет исходный список"""
+    N = len(arr)
+    for pos in range(N-1):
+        cur_min = pos
+        for k in range(pos+1, N):
+            if arr[k] < arr[pos]:
+                cur_min = k
+        arr[pos], arr[cur_min] = arr[cur_min], arr[pos]
     return arr
 
 
@@ -26,7 +44,7 @@ def find_smallest(arr):
     return index
 
 
-def choice_sort_var2(arr):
+def choice_sort_var3(arr):
     """Сортирует по возрастанию. Возвращает новый список."""
     new_arr = []
     for _ in range(len(arr)):
@@ -53,11 +71,15 @@ def main():
             start2 = time.time()
             choice_sort_var1(arr)
             finish2 = time.time()
+            start3 = time.time()
+            choice_sort_var3(arr)
+            finish3 = time.time()
         except Exception as error:
             print(error)
         finally:
             print(f'{i}: {choice_sort_var2.__name__}, time:{finish1 - start1}')
             print(f'{i}: {choice_sort_var1.__name__}, time:{finish2 - start2}')
+            print(f'{i}: {choice_sort_var3.__name__}, time:{finish3 - start3}')
 
 
 if __name__ == '__main__':

@@ -2,7 +2,9 @@ import time
 import random
 
 
-def binary_search(sorted_sequence, item):
+# Пример из книжки через цикл
+
+def binary_search_loop(sorted_sequence, item):
     low = 0
     high = len(sorted_sequence) - 1
     while low < high:
@@ -17,6 +19,27 @@ def binary_search(sorted_sequence, item):
     return None
 
 
+# Реализация через рекурсию (неудобно, что нужно сразу знать размер массива)
+
+def binary_search_rec(sorted_sequence, item, left, right):
+    mid = (left + right) // 2
+    if left > right:
+        return -1
+    if item == sorted_sequence[mid]:
+        return mid
+    if item < sorted_sequence[mid]:
+        return binary_search_rec(sorted_sequence, item, left, mid-1)
+    return binary_search_rec(sorted_sequence, item, mid+1, right)
+
+
+# Но можно обернуть в функцию
+
+def binary_search(sorted_sequence, item):
+    result = binary_search_rec(
+        sorted_sequence, item, 0, len(sorted_sequence)-1)
+    return result
+
+
 data = [
     (1, range(100), random.randint(1, 100)),
     (2, range(1000000), random.randint(1, 999999)),
@@ -28,13 +51,17 @@ data = [
 def main():
     for i, sequence, item in data:
         try:
-            start = time.time()
-            index = binary_search(sequence, item)
-            finish = time.time()
+            start1 = time.time()
+            index1 = binary_search_loop(sequence, item)
+            finish1 = time.time()
+            start2 = time.time()
+            index2 = binary_search(sequence, item)
+            finish2 = time.time()
         except Exception as error:
             print(error)
         finally:
-            print(f'{i}: index: {index}; item: {item}; time: {finish - start}')
+            print(f'{i}: index: {index1}; item: {item}; time: {finish1 - start1}')
+            print(f'{i}: index: {index2}; item: {item}; time: {finish2 - start2}')
 
 
 if __name__ == '__main__':
